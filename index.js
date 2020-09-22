@@ -39,7 +39,11 @@ function transformFilename(file) {
 			revPath(filename, file.revHash) :
 			revPath(filename.slice(0, extIndex), file.revHash) + filename.slice(extIndex);
 
-		return revHash(file.revHash + `${Date.now()}` + Math.random().toString()) + '-' + file.revHash + extension;
+		if (filename.lastIndexOf('group.css') === -1) {
+			filename = revHash(file.revHash + `${Date.now()}` + Math.random().toString()) + '-' + file.revHash;
+		}
+		console.log('transformFilename', filename)
+		return filename + extension;
 	});
 }
 
