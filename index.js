@@ -8,6 +8,7 @@ const sortKeys = require('sort-keys');
 const modifyFilename = require('modify-filename');
 const Vinyl = require('vinyl');
 const PluginError = require('plugin-error');
+const uuid = require('uuid').v4;
 
 function relativePath(base, filePath) {
 	filePath = filePath.replace(/\\/g, '/');
@@ -39,7 +40,7 @@ function transformFilename(file) {
 			revPath(filename, file.revHash) :
 			revPath(filename.slice(0, extIndex), file.revHash) + filename.slice(extIndex);
 
-		return filename + extension;
+		return uuid(filename).replace(/-/g, '').substring(0, 5) + extension;
 	});
 }
 
@@ -89,7 +90,8 @@ const plugin = () => {
 			// Attempt to parse the sourcemap's JSON to get the reverse filename
 			try {
 				reverseFilename = JSON.parse(file.contents.toString()).file;
-			} catch (_) {}
+			} catch (_) {
+			}
 
 			if (!reverseFilename) {
 				reverseFilename = path.relative(path.dirname(file.path), path.basename(file.path, '.map'));
@@ -115,7 +117,7 @@ const plugin = () => {
 
 plugin.manifest = (path_, options) => {
 	if (typeof path_ === 'string') {
-		path_ = {path: path_};
+		path_ = { path: path_ };
 	}
 
 	options = {
@@ -157,7 +159,8 @@ plugin.manifest = (path_, options) => {
 
 					try {
 						oldManifest = options.transformer.parse(manifestFile.contents.toString());
-					} catch (_) {}
+					} catch (_) {
+					}
 
 					manifest = Object.assign(oldManifest, manifest);
 				}
