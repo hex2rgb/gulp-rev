@@ -8,7 +8,6 @@ const sortKeys = require('sort-keys');
 const modifyFilename = require('modify-filename');
 const Vinyl = require('vinyl');
 const PluginError = require('plugin-error');
-const uuid = require('uuid').v4;
 
 function relativePath(base, filePath) {
 	filePath = filePath.replace(/\\/g, '/');
@@ -40,7 +39,7 @@ function transformFilename(file) {
 			revPath(filename, file.revHash) :
 			revPath(filename.slice(0, extIndex), file.revHash) + filename.slice(extIndex);
 
-		return uuid(filename).replace(/-/g, '').substring(0, 5) + extension;
+		return revHash(file.revHash)+ '-' + file.revHash + extension;
 	});
 }
 
