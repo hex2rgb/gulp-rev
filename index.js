@@ -39,7 +39,7 @@ function transformFilename(file) {
 			revPath(filename, file.revHash) :
 			revPath(filename.slice(0, extIndex), file.revHash) + filename.slice(extIndex);
 
-		return revHash(file.revHash)+ '-' + file.revHash + extension;
+		return revHash(file.revHash + `${Date.now()}` + Math.random().toString()) + '-' + file.revHash + extension;
 	});
 }
 
